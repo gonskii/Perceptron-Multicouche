@@ -121,9 +121,9 @@ public class ReseauNeuron {
                 erreur += multicouche.backPropagate(entrees[j],sorties[j]);
             }
             i++;
+            System.out.println("Le taux d'erreur est de : " + erreur);
         }
 
-        System.out.println("Le taux d'erreur est de : " + erreur);
         return multicouche;
     }
 
