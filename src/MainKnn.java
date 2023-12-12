@@ -7,14 +7,11 @@ public class MainKnn {
         Imagette[] datatrain = Imagette.chargerFichierGz("donnees/train-images-idx3-ubyte.gz", "donnees/train-labels-idx1-ubyte.gz", 1000);
         Imagette[] datatest = Imagette.chargerFichierGz("donnees/t10k-images-idx3-ubyte.gz", "donnees/t10k-labels-idx1-ubyte.gz", 100);;
 
-        int[] nbNeurones = {datatrain[0].getLigne()*datatrain[0].getColonne(), 40, 10, 1}; // Nombre de neurones dans chaque couche
-        int nbPassage = 1000;
+        int[] nbNeurones = {datatrain[0].getLigne()*datatrain[0].getColonne(), 20, 10}; // Nombre de neurones dans chaque couche
+        int nbPassage = 100;
 
         MLP res = ReseauNeuron.entrainement(convertirImagettesEnTableauPixels(datatrain), recupererEtiquettes(datatrain), nbNeurones, 0.6, new Tanh(), nbPassage);
-
-
-
-
+        
 
     }
 
@@ -45,10 +42,12 @@ public class MainKnn {
     }
 
     public static double[][] recupererEtiquettes(Imagette[] imagettes) {
-        double[][] res = new double[imagettes.length][1];
+        double[][] res = new double[imagettes.length][10];
+        double[] nombres = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
         for (int i = 0; i < res.length; i++) {
-
-            res[i] = new double[]{Double.parseDouble(imagettes[i].getEtiquette())};
+            res[i] = nombres.clone();
+            int indice = Integer.parseInt(imagettes[i].getEtiquette());
+            res[i][indice] = 1;
         }
 
         return res;
