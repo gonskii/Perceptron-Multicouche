@@ -104,7 +104,7 @@ public class ReseauNeuron {
 
     }
 
-    private static MLP entrainement(double[][] entrees, double[][] sorties, int[] layers, double learning_rates, TransferFunction fun, int nbPassage)
+    public static MLP entrainement(double[][] entrees, double[][] sorties, int[] layers, double learning_rates, TransferFunction fun, int nbPassage)
     {
         //On crée une instance
         MLP multicouche = new MLP(layers, learning_rates, fun);
