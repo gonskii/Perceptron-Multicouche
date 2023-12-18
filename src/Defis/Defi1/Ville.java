@@ -14,6 +14,7 @@ public class Ville extends Point implements DistancePoint, Serializable {
         super(latitude, longitude);
         this.nom = nom;
         this.population = population;
+        this.villesVoisines = new VilleVoisine();
     }
 
     public Ville(String nom, int population) {
@@ -31,12 +32,12 @@ public class Ville extends Point implements DistancePoint, Serializable {
         return population;
     }
 
-    public void addVille(Ville ville,double coefficient) {
+    public void addVille(Ville ville,String type) {
         if(!this.equals(ville))
-            villesVoisines.addVille(ville, this.distance(ville)*coefficient);
+            villesVoisines.addVille(ville, new Route(type,this.distance(ville)));
     }
 
-    public Map<Ville,Double> getVillesVoisines() {
+    public Map<Ville,Route> getVillesVoisines() {
         return villesVoisines.getVillesVoisines();
     }
 
@@ -83,5 +84,13 @@ public class Ville extends Point implements DistancePoint, Serializable {
         ois.close();
         fis.close();
         return villes;
+    }
+
+    public List<Ville> ajouterVille(List<Ville> villes) {
+        villes.add(this);
+        villes.stream().sorted(new VilleComparator()).forEach(ville -> {
+            ((Ville) ville).addVille(this,"départementale");
+        });
+        return villes.stream().sorted(new VilleComparator()).toList();
     }
 }

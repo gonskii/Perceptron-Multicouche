@@ -6,29 +6,29 @@ import java.util.List;
 import java.util.Map;
 
 public class VilleVoisine implements Serializable {
-    private Map<Ville,Double> villesVoisines;
+    private Map<Ville,Route> villesVoisines;
 
     public VilleVoisine() {
         this.villesVoisines = new HashMap<>();
     }
 
-    public Map<Ville,Double> getVillesVoisines() {
+    public Map<Ville,Route> getVillesVoisines() {
         return villesVoisines;
     }
 
-    public void setVillesVoisines(Map<Ville,Double> villesVoisines) {
+    public void setVillesVoisines(Map<Ville,Route> villesVoisines) {
         this.villesVoisines = villesVoisines;
     }
 
-    public void addVille(Ville ville, double distance) {
-        villesVoisines.put(ville, distance);
+    public void addVille(Ville ville, Route route) {
+        villesVoisines.put(ville, route);
     }
 
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        for (Map.Entry<Ville,Double> entry : villesVoisines.entrySet()) {
-            sb.append(entry.getKey().getNom()).append(" : ").append(entry.getValue()).append(" km\n");
+        for (Map.Entry<Ville,Route> entry : villesVoisines.entrySet()) {
+            sb.append(entry.getKey().getNom()).append(" : ").append(entry.getValue().distance).append(" km sur ").append(entry.getValue().type).append("\n");
         }
         return sb.toString();
     }

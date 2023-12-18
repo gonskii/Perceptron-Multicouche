@@ -66,22 +66,26 @@ public class Main {
         System.out.println("--------------------");
         System.out.println("Villes sans longitude ni latitude :");
         villes100.stream().filter(v -> ((Ville)v).getLongitude() == 0 && ((Ville)v).getLatitude() == 0).forEach(v -> System.out.println(v));
-        villes100.forEach(ville -> {
+        villes100.stream().sorted(new VilleComparator()).forEach(ville -> {
             //Pour les 50 premières villes, autoroutes
             if(villes100.indexOf(ville) < 50) {
-                villes100.stream().limit(50).filter(villeR -> !villeR.equals(ville)).forEach(villeR -> {
-                    ((Ville)ville).addVille((Ville) villeR,1.0);
+                villes100.stream().filter(villeR -> !villeR.equals(ville)).forEach(villeR -> {
+                    if(villes100.indexOf(villeR) < 50) {
+                        ((Ville)ville).addVille((Ville) villeR,"autoroute");
+                    } else {
+                        ((Ville)ville).addVille((Ville) villeR,"voie rapide");
+                    }
                 });
             } else {
                 //Pour les 50 dernières villes, voies rapides
                 villes100.stream().filter(villeR -> !villeR.equals(ville)).forEach(villeR -> {
-                        ((Ville)ville).addVille((Ville) villeR,1.0);
+                        ((Ville)ville).addVille((Ville) villeR,"voie rapide");
                 });
             }
         });
         System.out.println("--------------------");
         System.out.println("Villes avec leurs voisines :");
-        //System.out.println(villes100);
+        System.out.println(villes100);
         Ville.serialize(villes100);
 
     }
