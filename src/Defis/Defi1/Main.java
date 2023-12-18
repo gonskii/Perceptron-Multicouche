@@ -10,12 +10,14 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Main {
     static String api = "https://api-adresse.data.gouv.fr/search/";
     static String communes = "https://geo.api.gouv.fr/communes";
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, ClassNotFoundException {
         URL url = new URL(communes);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("GET");
@@ -64,5 +66,24 @@ public class Main {
         System.out.println("--------------------");
         System.out.println("Villes sans longitude ni latitude :");
         villes100.stream().filter(v -> ((Ville)v).getLongitude() == 0 && ((Ville)v).getLatitude() == 0).forEach(v -> System.out.println(v));
+        villes100.forEach(ville -> {
+            //Pour les 50 premières villes, autoroutes
+            if(villes100.indexOf(ville) < 50) {
+                villes100.stream().limit(50).filter(villeR -> !villeR.equals(ville)).forEach(villeR -> {
+                    ((Ville)ville).addVille((Ville) villeR,1.0);
+                });
+            } else {
+                //Pour les 50 dernières villes, voies rapides
+                villes100.stream().filter(villeR -> !villeR.equals(ville)).forEach(villeR -> {
+                        ((Ville)ville).addVille((Ville) villeR,1.0);
+                });
+            }
+        });
+        System.out.println("--------------------");
+        System.out.println("Villes avec leurs voisines :");
+        //System.out.println(villes100);
+        Ville.serialize(villes100);
+
     }
+
 }
