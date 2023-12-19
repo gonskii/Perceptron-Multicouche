@@ -7,11 +7,12 @@ import java.io.IOException;
 public class ClassificationImage {
 
     public static void main(String[] args) throws IOException {
-        Imagette[] datatrain = Imagette.chargerFichierGz("donnees/train-images-idx3-ubyte.gz", "donnees/train-labels-idx1-ubyte.gz", 10000 );
-        Imagette[] datatest = Imagette.chargerFichierGz("donnees/t10k-images-idx3-ubyte.gz", "donnees/t10k-labels-idx1-ubyte.gz", 10000);;
+        // Mettre une grande valeur == max
+        Imagette[] datatrain = Imagette.chargerFichierGz("donnees/train-images-idx3-ubyte.gz", "donnees/train-labels-idx1-ubyte.gz", 1000000 );
+        Imagette[] datatest = Imagette.chargerFichierGz("donnees/t10k-images-idx3-ubyte.gz", "donnees/t10k-labels-idx1-ubyte.gz", 1000000);;
 
         int[] nbNeurones = {datatrain[0].getLigne()*datatrain[0].getColonne(), 100,50, 10}; // Nombre de neurones dans chaque couche
-        int nbPassage = 150000;
+        int nbPassage = 1000000;
 
         MLP res = entrainement(convertirImagettesEnTableauPixels(datatrain), recupererEtiquettes(datatrain), nbNeurones, 0.6, new Sigmoide(), nbPassage,true, datatest);
 
