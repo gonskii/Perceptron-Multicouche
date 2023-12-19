@@ -27,11 +27,10 @@ Exécutez le fichier `ClassificationImage.java` pour entraîner le MLP et tester
 - **Entraînement du MLP**
   - Utilisation d'une architecture à couches multiples définie dans le tableau `nbNeurones`
   - Choix du nombre de passages d'entraînement avec `nbPassage`
-  - Utilisation de la fonction d'activation Sigmoid pour le réseau
+  - Utilisation de la fonction d'activation Sigmoid pour le réseau ou TanH
 
 - **Tests et évaluation**
   - Méthode `testReseau()` pour évaluer les performances du réseau sur les données de test
-  - Calcul du taux d'erreur et de réussite
 
 ## Remarques supplémentaires
 
