@@ -4,7 +4,7 @@ import MLP.function.TransferFunction;
 
 import java.io.IOException;
 
-public class MainKnn {
+public class ClassificationImage {
 
     public static void main(String[] args) throws IOException {
         Imagette[] datatrain = Imagette.chargerFichierGz("donnees/train-images-idx3-ubyte.gz", "donnees/train-labels-idx1-ubyte.gz", 10000 );
