@@ -1,3 +1,5 @@
+package MLP.function;
+
 public class Sigmoide implements TransferFunction{
 
     @Override

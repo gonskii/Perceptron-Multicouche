@@ -1,3 +1,5 @@
+package MLP.function;
+
 public class Tanh implements TransferFunction{
 
     @Override
