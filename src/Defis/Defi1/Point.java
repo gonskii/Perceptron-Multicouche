@@ -1,6 +1,6 @@
 package Defis.Defi1;
 
-public class Point {
+public class Point implements java.io.Serializable{
     private double latitude;
     private double longitude;
 

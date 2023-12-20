@@ -1,27 +1,26 @@
 package Defis.Defi1;
 
 import java.io.*;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-public class Ville extends Point implements DistancePoint, Serializable {
+public class Ville extends Point implements Serializable {
     private String nom;
     private int population;
-    private VilleVoisine villesVoisines;
 
     public Ville(String nom, int population, double latitude, double longitude) {
         super(latitude, longitude);
         this.nom = nom;
         this.population = population;
-        this.villesVoisines = new VilleVoisine();
     }
 
     public Ville(String nom, int population) {
         super();
         this.nom = nom;
         this.population = population;
-        this.villesVoisines = new VilleVoisine();
+    }
+
+    public static Ville getVilleByName(List<Ville> graphe, String nomVille) {
+        return graphe.stream().filter(ville -> ville.getNom().equals(nomVille)).findFirst().get();
     }
 
     public String getNom() {
@@ -32,33 +31,14 @@ public class Ville extends Point implements DistancePoint, Serializable {
         return population;
     }
 
-    public void addVille(Ville ville,String type) {
-        if(!this.equals(ville))
-            villesVoisines.addVille(ville, new Route(type,this.distance(ville)));
-    }
-
-    public Map<Ville,Route> getVillesVoisines() {
-        return villesVoisines.getVillesVoisines();
-    }
-
     @Override
     public String toString() {
-        return "Ville{" +
+        return "{" +
                 "nom='" + nom + '\'' +
-                ", population=" + population +
-                ", latitude=" + getLatitude() +
-                ", longitude=" + getLongitude() +
-                ", villesVoisines=" + villesVoisines.toString() +
+                ", pop=" + population +
+                ", lat=" + getLatitude() +
+                ", long=" + getLongitude() +
                 '}';
-    }
-
-    @Override
-    public double distance(Point p) {
-        double a = Math.sin(Math.toRadians(p.getLatitude() - getLatitude()) / 2) * Math.sin(Math.toRadians(p.getLatitude() - getLatitude()) / 2) +
-                Math.cos(Math.toRadians(getLatitude())) * Math.cos(Math.toRadians(p.getLatitude())) *
-                        Math.sin(Math.toRadians(p.getLongitude() - getLongitude()) / 2) * Math.sin(Math.toRadians(p.getLongitude() - getLongitude()) / 2);
-        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        return RAYON_TERRE * c;
     }
 
     @Override
@@ -69,8 +49,8 @@ public class Ville extends Point implements DistancePoint, Serializable {
         return getNom().equals(ville.getNom());
     }
 
-    public static void serialize(List<Ville> villes) throws IOException {
-        FileOutputStream fos = new FileOutputStream("src/Defis/Defi1/villes.ser");
+    public static void serialize(List<Ville> villes,String f) throws IOException {
+        FileOutputStream fos = new FileOutputStream(f);
         ObjectOutputStream oos = new ObjectOutputStream(fos);
         oos.writeObject(villes);
         oos.close();
@@ -86,11 +66,4 @@ public class Ville extends Point implements DistancePoint, Serializable {
         return villes;
     }
 
-    public List<Ville> ajouterVille(List<Ville> villes) {
-        villes.add(this);
-        villes.stream().sorted(new VilleComparator()).forEach(ville -> {
-            ((Ville) ville).addVille(this,"départementale");
-        });
-        return villes.stream().sorted(new VilleComparator()).toList();
-    }
 }
