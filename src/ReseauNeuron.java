@@ -1,9 +1,14 @@
+import MLP.MLP;
+import MLP.function.Sigmoide;
+import MLP.function.Tanh;
+import MLP.function.TransferFunction;
+
 import java.util.Random;
 
 public class ReseauNeuron {
     public static void main(String[] args) {
         // On définit la structure de la couche
-        int[] layers = {2,3,1};
+        int[] layers = {2,5,1};
         int nbIteration = 1000000;
         double learningRate = 0.1;
 
@@ -24,6 +29,14 @@ public class ReseauNeuron {
         tester(new Tanh(), layers, nbIteration, learningRate, true);
     }
 
+    /**
+     * Méthode qui permet de tester notre réseau de neurone
+     * @param func fonction
+     * @param layers couche
+     * @param nbIteration nombre d'itération
+     * @param learningRate taux d'apprentissage
+     * @param dimension dimension dans la réponse
+     */
     public static void tester(TransferFunction func, int[] layers, int nbIteration, double learningRate, boolean dimension) {
         // On initialise
         double[][] entree_ET;
@@ -75,7 +88,7 @@ public class ReseauNeuron {
 
 
         System.out.println("Résultats du ET après entraînement : ");
-        MLP res1 = entrainement(entree_ET, sortie_ET, layers, learningRate, func, nbIteration);
+        MLP res1 = entrainement(entree_ET, sortie_ET, layers, learningRate, func, nbIteration, false);
 
         for (double[] input : entree_ET) {
             double[] output = res1.execute(input);
@@ -84,9 +97,8 @@ public class ReseauNeuron {
         System.out.println(" ");
 
 
-
         System.out.println("Résultats du OU après entraînement : ");
-        MLP res2 = entrainement(entree_OU, sortie_OU, layers, learningRate, func, nbIteration);
+        MLP res2 = entrainement(entree_OU, sortie_OU, layers, learningRate, func, nbIteration,false);
 
         for (double[] input : entree_ET) {
             double[] output = res2.execute(input);
@@ -95,8 +107,8 @@ public class ReseauNeuron {
         System.out.println(" ");
 
 
-        System.out.println("Résultats du XOR après entraînement ( ne fonctionne pas pour sig) : ");
-        MLP res3 = entrainement(entree_XOR, sortie_XOR, layers, learningRate, func, nbIteration);
+        System.out.println("Résultats du XOR après entraînement : ");
+        MLP res3 = entrainement(entree_XOR, sortie_XOR, layers, learningRate, func, nbIteration,false);
         for (double[] input : entree_ET) {
             double[] output = res3.execute(input);
             System.out.println(input[0] + " XOR " + input[1] + " = " + Math.round(output[0]));
@@ -104,31 +116,57 @@ public class ReseauNeuron {
 
     }
 
-    public static MLP entrainement(double[][] entrees, double[][] sorties, int[] layers, double learning_rates, TransferFunction fun, int nbPassage)
+    /**
+     * Méthode qui permets de réaliser l'entrainement du MLP
+     * @param entrees les données d'entrée
+     * @param sorties les données de sortie
+     * @param layers les différentes couches
+     * @param learning_rates le taux d'apprentissage
+     * @param fun la fonction
+     * @param nbPassage le nombre de passages
+     * @param affichage l'affichage du temps etc
+     * @return retourne un MLP entrainé
+     */
+    public static MLP entrainement(double[][] entrees, double[][] sorties, int[] layers, double learning_rates, TransferFunction fun, int nbPassage, boolean affichage)
     {
         //On crée une instance
         MLP multicouche = new MLP(layers, learning_rates, fun);
 
         //On entraine
-        int i = 0;
-        double erreur = Double.MAX_VALUE;
+        int i = 1;
+        double erreur = 1;
+        double totalErreur = 0;
 
-        while(i< nbPassage && erreur > 0.001)
+        // Démarrez le chronomètre
+        long debut = System.currentTimeMillis();
+
+        while(i< nbPassage && erreur > 0.02)
         {
-            erreur = 0.0;
-            for(int j = 0; j<entrees.length; j++)
-            {
-                erreur += multicouche.backPropagate(entrees[j],sorties[j]);
-            }
+            int indexAleatoire = (int) (Math.random() * (entrees.length-1));
+            totalErreur += multicouche.backPropagate(entrees[indexAleatoire], sorties[indexAleatoire]);
+
+            erreur = totalErreur /i;
+
+            if(affichage) System.out.println(erreur);
             i++;
-            System.out.println("Le taux d'erreur est de : " + erreur);
+        }
+
+        if(affichage)
+        {
+            long fin = System.currentTimeMillis();
+            long tempsEcoule = fin - debut;
+            System.out.println("\nTemps d'entraînement : " + tempsEcoule + " millisecondes\n");
         }
 
         return multicouche;
     }
 
-    // Méthode pour mélanger les données
-    private static void melangerDonnees(double[][] entree, double[][] sortie) {
+    /**
+     * Méthode qui permets de mélanger les données
+     * @param entree données d'entrée
+     * @param sortie données de sortie
+     */
+    public static void melangerDonnees(double[][] entree, double[][] sortie) {
         Random random = new Random();
 
         for (int i = entree.length - 1; i > 0; i--) {

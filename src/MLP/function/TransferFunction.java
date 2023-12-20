@@ -1,4 +1,6 @@
-interface TransferFunction  {
+package MLP.function;
+
+public interface TransferFunction  {
     /**
      * Function de transfert
      * @param value entrée
